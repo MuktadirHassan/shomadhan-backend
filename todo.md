@@ -14,7 +14,7 @@
 5. admin login ✅
 6. POST articles for both user and admin ✅
 7. delete articles for admin ✅
-8. user can delete his own articles
+8. user can delete his own articles ✅
 
 ## Pages
 

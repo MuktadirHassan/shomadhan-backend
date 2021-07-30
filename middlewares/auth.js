@@ -15,8 +15,29 @@ module.exports.verifyUser = async (req, res, next) => {
       req.headers.authorization,
       process.env.JWT_SECRET
     );
-    req.verified = verified;
     next();
+  } catch (err) {
+    res.json({
+      message: "Authentication Failed",
+      code: "#004",
+    });
+  }
+};
+module.exports.verifyCurrentUser = async (req, res, next) => {
+  try {
+    const verified = jwt.verify(
+      req.headers.authorization,
+      process.env.JWT_SECRET
+    );
+    if (verified.user.uid === req.params.uid) {
+      next();
+    } else {
+      res
+        .json({
+          message: "Permission Denied. You are not the author of this post.",
+        })
+        .status(403);
+    }
   } catch (err) {
     res.json({
       message: "Authentication Failed",
@@ -30,9 +51,8 @@ module.exports.verifyAdmin = (req, res, next) => {
       req.headers.authorization,
       process.env.JWT_SECRET
     );
-    console.log(verified.user.role);
+
     if (verified.user.role === "admin") {
-      req.verified = verified;
       next();
     } else {
       res

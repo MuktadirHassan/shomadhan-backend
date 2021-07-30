@@ -51,7 +51,6 @@ module.exports.get_single_article = async (req, res, next) => {
   }
 };
 
-// Need more robust logic
 module.exports.update_article = async (req, res, next) => {
   try {
     const articles = await ArticleModel.updateOne(
@@ -61,16 +60,23 @@ module.exports.update_article = async (req, res, next) => {
       {
         title: req.body.title,
         body: req.body.body,
+        lastUpdated: Date.now(),
       }
     );
-    res
-      .json({
-        message: "Article deleted successfully",
-      })
-      .status(200);
+    if (articles.nModified > 0) {
+      return res
+        .json({
+          articles,
+          message: "Article updated successfully",
+        })
+        .status(200);
+    }
+    res.json({
+      message: "No articles found with this id",
+    });
   } catch (err) {
     res.json({
-      message: "Error getting articles",
+      message: "Error updating articles",
       error: err.message,
     });
   }
@@ -84,7 +90,6 @@ module.exports.delete_article = async (req, res, next) => {
     if (articles.deletedCount > 0) {
       return res
         .json({
-          articles,
           message: "Article deleted successfully",
         })
         .status(200);

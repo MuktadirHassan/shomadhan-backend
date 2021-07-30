@@ -6,7 +6,6 @@ const app = express();
 const morgan = require("morgan");
 
 // Routes
-const userRoute = require("./routes/user.js");
 const publicRoute = require("./routes/public.js");
 const adminRoute = require("./routes/admin");
 const errorHandler = require("./middlewares/errorHandler.js");
@@ -28,7 +27,6 @@ app.use(cors());
 app.use(morgan("tiny"));
 
 // Route middlewares
-app.use("/", userRoute);
 app.use("/api/v1", publicRoute);
 app.use("/admin", adminRoute);
 
