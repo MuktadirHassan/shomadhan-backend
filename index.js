@@ -4,9 +4,10 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
 
-// Routers
-const publicRouter = require("./routes/public.js");
-const protectedRouter = require("./routes/protected.js");
+// Routes
+const userRoute = require("./routes/user.js");
+const publicRoute = require("./routes/public.js");
+const errorHandler = require("./middlewares/errorHandler.js");
 
 // Database connection
 mongoose.connect(
@@ -23,18 +24,11 @@ app.use(express.json());
 app.use(cors());
 
 // Route middlewares
-app.use("/api/v1/", publicRouter);
-app.use("/api/v1/secure/", protectedRouter);
+app.use("/", userRoute);
+app.use("/api/v1", publicRoute);
 
 // Error handler
-app.use((err, req, res, next) => {
-  console.log(err.message);
-  res
-    .send(
-      "Something went wrong. Contact the server administrator and have a relax. See you not for mind."
-    )
-    .status(503);
-});
+app.use(errorHandler);
 
 app.listen(process.env.PORT, () =>
   console.log(`listening on port ${process.env.PORT}`)
