@@ -2,6 +2,25 @@ const mongoose = require("mongoose");
 const ObjectID = mongoose.Types.ObjectId;
 const ArticleModel = require("../models/ArticleModel");
 
+module.exports.add_article = async (req, res, next) => {
+  try {
+    const article = new ArticleModel({
+      title: req.body.title,
+      authorEmail: req.body.authorEmail,
+      body: req.body.content,
+      date: req.body.date,
+    });
+    await article.save();
+    res.json({
+      message: "Article posted successfully",
+    });
+  } catch (err) {
+    res.json({
+      message: "Error adding articles",
+      error: err.message,
+    });
+  }
+};
 module.exports.get_all_articles = async (req, res, next) => {
   try {
     const articles = await ArticleModel.find({});
