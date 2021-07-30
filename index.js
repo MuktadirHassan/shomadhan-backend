@@ -3,10 +3,12 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
+const morgan = require("morgan");
 
 // Routes
 const userRoute = require("./routes/user.js");
 const publicRoute = require("./routes/public.js");
+const adminRoute = require("./routes/admin");
 const errorHandler = require("./middlewares/errorHandler.js");
 
 // Database connection
@@ -22,10 +24,13 @@ mongoose.connect(
 // Middlewares
 app.use(express.json());
 app.use(cors());
+// For logging
+app.use(morgan("tiny"));
 
 // Route middlewares
 app.use("/", userRoute);
 app.use("/api/v1", publicRoute);
+app.use("/admin", adminRoute);
 
 // Error handler
 app.use(errorHandler);

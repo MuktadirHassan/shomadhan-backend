@@ -81,14 +81,20 @@ module.exports.delete_article = async (req, res, next) => {
     const articles = await ArticleModel.deleteOne({
       _id: ObjectID(req.params.articleId),
     });
-    res
-      .json({
-        message: "Article deleted successfully",
-      })
-      .status(200);
+    if (articles.deletedCount > 0) {
+      return res
+        .json({
+          articles,
+          message: "Article deleted successfully",
+        })
+        .status(200);
+    }
+    res.json({
+      message: "No article deleted. Wrong or no id",
+    });
   } catch (err) {
     res.json({
-      message: "Error getting articles",
+      message: "Error deleting articles",
       error: err.message,
     });
   }
