@@ -1,6 +1,6 @@
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcrypt");
-const salt = process.env.SALT || 7;
+const saltRound = Number(process.env.SALT) || 7;
 const jwt = require("jsonwebtoken");
 
 module.exports.register = async (req, res, next) => {
@@ -12,7 +12,9 @@ module.exports.register = async (req, res, next) => {
         message: "User already exists",
       });
     } else {
+      const salt = await bcrypt.genSalt(saltRound);
       const hash = await bcrypt.hash(req.body.password, salt);
+
       const newUser = new UserModel({
         email: req.body.email,
         password: hash,
@@ -26,6 +28,7 @@ module.exports.register = async (req, res, next) => {
       });
     }
   } catch (err) {
+    console.log(err);
     res.json({
       status: "failed",
       message: err.message,
