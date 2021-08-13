@@ -3,7 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
-const morgan = require("morgan");
+// const morgan = require("morgan");
 
 // Routes
 const publicRoute = require("./routes/public.js");
@@ -24,7 +24,7 @@ mongoose.connect(
 app.use(express.json());
 app.use(cors());
 // For logging
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 
 // Route middlewares
 app.use("/api/v1", publicRoute);
