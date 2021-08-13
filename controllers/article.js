@@ -7,8 +7,8 @@ module.exports.add_article = async (req, res, next) => {
     const article = new ArticleModel({
       title: req.body.title,
       authorEmail: req.body.authorEmail,
-      body: req.body.content,
-      date: req.body.date,
+      body: req.body.body,
+      authorId: req.body.authorId,
     });
     await article.save();
     res.json({
@@ -23,7 +23,21 @@ module.exports.add_article = async (req, res, next) => {
 };
 module.exports.get_all_articles = async (req, res, next) => {
   try {
-    const articles = await ArticleModel.find({});
+    res.json({
+      data: res.paginatedData,
+    });
+  } catch (err) {
+    res.json({
+      message: "Error getting articles",
+      error: err.message,
+    });
+  }
+};
+
+module.exports.get_articles_by_user = async (req, res, next) => {
+  try {
+    console.log(req.params.email);
+    const articles = await ArticleModel.find({ authorEmail: req.params.email });
     res.json({
       data: articles,
     });

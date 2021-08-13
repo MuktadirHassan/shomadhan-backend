@@ -49,19 +49,19 @@ module.exports.login = async (req, res, next) => {
       currentUser[0].password
     );
     if (correctPassword) {
-      const token = jwt.sign(
-        {
-          user: {
-            email: currentUser[0].email,
-            uid: currentUser[0]._id,
-            role: currentUser[0].role,
-          },
+      const userInfo = {
+        user: {
+          email: currentUser[0].email,
+          uid: currentUser[0]._id,
+          role: currentUser[0].role,
         },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
-      );
+      };
+      const token = jwt.sign(userInfo, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
       return res
         .json({
+          userInfo,
           token,
           message: "Authentication success",
         })
